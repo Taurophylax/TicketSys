@@ -1,0 +1,143 @@
+body { 
+	margin: 0;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+#head {
+	height: 40px;
+	width: auto;
+	background-color: #000;
+	padding-top: 10px;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+}
+
+#head>a { padding: 0px 10px; }
+
+.command {
+	height: 25px;
+	width: auto;
+	text-align: center;
+	padding-top: 5px;
+	font-size: 14px;
+}
+
+/* Server Message Box - Error|Success|None */
+.E { background-color: #fcc;	color: #f00; font-weight: bold; }
+.S { background-color: #cfc;	color: #030; font-weight: bold; }
+.N { background-color: #eee;	color: #333; }
+
+
+#tickets {
+	margin: auto;
+	width: 80%;
+	overflow: scroll;
+	height: 300px;
+	border: 3px solid #999;
+	background-color: #eee;
+	border-radius: 5px;
+}
+
+#casewrapper {
+	width: 80%;
+	height: 230px;
+	border: 5px solid #cec;
+	border-radius: 15px;
+	margin: 5px auto;
+	padding: 5px;
+	background-color: #eee;
+}
+
+#caseedit { font-size: 14px; }
+#caseedit input, #caseedit select { border: 1px solid #aaa; margin-top: 5px;  }
+.longdescbox { width: 500px; }
+#editticketinfo { width: 100%; }
+
+#editticketinfo td {
+	padding: 3px;
+	margin: 1px;
+	border: 2px solid #aca;
+}
+
+#ticketman {
+	width: 100%;
+	height: 20px;
+	background-color: #cec;
+	padding-bottom: 4px;
+}
+
+#ticketman>a  {
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 5px;
+}
+
+#ticketlist {
+	font-size: 12px;
+	color: #333;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	margin-top: 0;
+}
+
+.tick > td  { 
+	border: 1px solid #999;
+	max-width: 150px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tick > th  { border: 1px solid #999; min-width: 90px; } 
+
+.tick_closed { color: #900; font-weight: bold; }
+.tick_open { color: #090; font-weight: bold; }
+
+#tickhead {
+	font-weight: bold;
+	text-align: center;
+	background-color: #fff;
+}
+
+#footer {
+	width: 200px;
+	margin: auto;
+	margin-top: 10px;
+	font-size: 8px;
+	color: #aaa;
+}
+
+/* TABLESORTER  */
+table.tablesorter {
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
+}
+
+table.tablesorter thead tr .header {
+	background-image: url(images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	padding: 4px;
+	background-color: #fff;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#efe;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(images/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(images/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+	background-color: #ccc;
+}
