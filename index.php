@@ -26,10 +26,8 @@
 
 /* CHECK FOR POSTS AND SANITIZE */
 					
-						function check_form($X) {
-						  $X = trim(stripslashes(htmlspecialchars($X)));
-						  return $X;
-						}
+						include 'functions.php';
+						include 'queries.php';
 						
 						if ($_SERVER["REQUEST_METHOD"] == "POST")
 						{
@@ -111,15 +109,9 @@
 
 							if (!empty($_POST)) 
 							{ 
-								$dbhost = "localhost";
-								$dbname = "ticketsys";
-								$dbuser = "ticketsys";
-								$dbpass = "derp99";
-									
-								$pdo = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass, 
-											array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+								$pdo = newPDO();
 
-/* NEW TICKET QUERY */										
+/* NEW TICKET QUERY */			
 								if ($pType=="newTicket") {
 									$created = date('Y-m-d');
 									$updated = date('Y-m-d H:i:s');
@@ -127,23 +119,7 @@
 									$assigned = "Unassigned";
 									
 									try {
-									
-										$query = $pdo->prepare("INSERT INTO tickets (name,created,updated,department,severity,description,status,assigned) VALUES 		(:name,:created,:updated,:department,:severity,:description,:status,:assigned)");
-										
-										$data = array(
-										  ':name'=>$name,
-										  ':created'=>$created,
-										  ':updated'=>$updated,
-										  ':department'=>$department,
-										  ':severity'=>$severity,
-										  ':description'=>$description,
-										  ':status'=>$status,
-										  ':assigned'=>$assigned
-										  );
-
-										
-										$query->execute($data);
-										
+										new_ticket($pdo,$name,$created,$updated,$department,$severity,$description,$status,$assigned);	
 										printf('<div class="command S">Ticket created successfully.</div>');
 									}
 
@@ -159,17 +135,13 @@
 								if ($pType=="newClose") {
 								
 									try {
-									
-										$query = $pdo->prepare("UPDATE tickets SET status = 'Closed' WHERE id = {$closeid}");			
-										$query->execute();
-										
+										close_ticket($pdo,$closeid);
 										printf('<div class="command S">Ticket closed successfully.</div>');
 									}
 
 									catch(PDOException $e) {
 										printf('<div class="command E">Error - Could not close ticket... %s</div>', $e->getMessage());
 									}
-								
 								}
 								
 /* EDIT TICKET QUERY */
@@ -177,27 +149,7 @@
 								
 									try {
 									
-										$query = $pdo->prepare("UPDATE tickets 
-																SET 
-																	updated = :editupdated,
-																	department = :editdept,
-																	severity = :editsev,
-																	description = :editdesc,
-																	status = :editstatus,
-																	assigned = :editassigned,
-																	notes = :editnotes
-																WHERE id = {$editid}");
-
-									    $query->bindParam(':editupdated',$editupdated, PDO::PARAM_STR);
-									    $query->bindParam(':editdept',$editdept, PDO::PARAM_STR);										
-									    $query->bindParam(':editsev',$editsev, PDO::PARAM_STR);
-									    $query->bindParam(':editdesc',$editdesc, PDO::PARAM_STR);
-									    $query->bindParam(':editstatus',$editstatus, PDO::PARAM_STR);
-									    $query->bindParam(':editassigned',$editassigned, PDO::PARAM_STR);
-										$query->bindParam(':editnotes',$editnotes, PDO::PARAM_STR);
-										  
-										$query->execute();
-										
+										edit_ticket($pdo,$editStatus,$editAssigned,$editDept,$editSev,$editId,$editUpdated,$editDesc,$editNotes);
 										printf('<div class="command S">Ticket edited successfully.</div>');
 									}
 
@@ -222,19 +174,8 @@
 				printf('<div id="casewrapper">');
 				
 				$caseid = check_form($_GET["caseopen"]);
-				
-				$dbhost = "localhost";
-				$dbname = "ticketsys";
-				$dbuser = "ticketsys";
-				$dbpass = "derp99";
-				
-				$pdo = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass, 
-							array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-				
-				$query = $pdo->prepare("SELECT * FROM tickets WHERE id = :caseid");						
-				$query->bindParam(':caseid', $caseid, PDO::PARAM_INT);
-								
-				$query->execute();
+							
+				$query = get_record($caseid);
 				
 				while ($row = $query->fetch()) {
 					$idfound = 1;
@@ -347,22 +288,7 @@
 
 /* DISPLAY TICKETS */
 				
-					$dbhost = "localhost";
-					$dbname = "ticketsys";
-					$dbuser = "ticketsys";
-					$dbpass = "derp99";
-									
-					$pdo = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass, 
-								array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-/* IF FILTERED */				
-					if ($pType=="newFilter") {	
-						$query = $pdo->prepare("SELECT * FROM tickets WHERE {$fltobject} LIKE :fltvalue");						
-						$query->bindParam(':fltvalue', $fltvalue, PDO::PARAM_STR);
-					} else {
-						$query = $pdo->prepare("SELECT * FROM tickets");
-					}	
-
-					$query->execute();					
+					$query = get_tickets($fltobject, $fltvalue, $pType);
 					
 					while ($row = $query->fetch()) {
 						if ($row[status] == "Closed") {
