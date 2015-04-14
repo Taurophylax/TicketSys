@@ -1,22 +1,12 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
 
-Vagrant.configure(2) do |config|
-  # Specify Vagrant box to use
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.box_url = "https://atlas.hashicorp.com/ubuntu/trusty64"
-
-  # Forward ports so we can access the web server hosting TicketSys
+  config.vm.box = "scotch/box"
   config.vm.network "forwarded_port", guest: 80, host: 8080
-
-  # Run provisioning scripts to update, install packages, etc.
+  config.vm.hostname = "scotchbox"
+  #config.vm.synced_folder ".", "/var/www", :mount_options => ["dmode=777", "fmode=666"]
   config.vm.provision "shell", inline: <<-SHELL
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password derp99'
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password derp99'
-    sudo apt-get update
-    sudo apt-get -y install lamp-server^
-    sudo rm /var/www/html/index.html
-    sudo apt-get -y install git
-    sudo git clone https://github.com/Taurophylax/TicketSys.git /var/www/html
+    sudo git clone https://github.com/Taurophylax/TicketSys.git /var/www/public
+    sudo service apache2 start
   SHELL
+
 end
